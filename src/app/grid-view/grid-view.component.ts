@@ -40,26 +40,6 @@ export class GridViewComponent implements OnInit {
     this.data = this.filterData.slice(Number(this.start), Number(this.end));
   }
 
-  onBackOrFor(type: String) {
-    console.log(type, "TYEPs");
-    if (type === "back") {
-    }
-  }
-
-  onSubmit(): void {
-    this.filterData =
-      this.searchForm.value.name === ""
-        ? this.items
-        : this.items.filter(
-            (item) =>
-              this.searchForm.value.name !== "" &&
-              item.name
-                .toLowerCase()
-                .includes(this.searchForm.value.name.toLowerCase())
-          );
-    this.resetPage();
-  }
-
   /**
    * Clears all filters
    */
