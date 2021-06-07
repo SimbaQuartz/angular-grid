@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
-import { Observable } from "rxjs";
 import { data } from "../data";
 
 declare var $: any;
@@ -30,6 +29,8 @@ export class GridViewComponent implements OnInit {
   constructor(private formBuilder: FormBuilder) {}
 
   onPageChange(page: Number): void {
+    console.log(page, "PAge");
+
     this.currentPage = page;
     this.start = (Number(page) - 1) * Number(this.viewSize);
     this.end =
@@ -39,18 +40,29 @@ export class GridViewComponent implements OnInit {
     this.data = this.filterData.slice(Number(this.start), Number(this.end));
   }
 
+  onBackOrFor(type: String) {
+    console.log(type, "TYEPs");
+    if (type === "back") {
+    }
+  }
+
   onSubmit(): void {
-    this.filterData = this.items.filter(
-      (item) =>
-        this.searchForm.value.name &&
-        item.name
-          .toLowerCase()
-          .includes(this.searchForm.value.name.toLowerCase())
-    );
-    console.log(this.searchForm.value.name, this.filterData, this.items);
+    this.filterData =
+      this.searchForm.value.name === ""
+        ? this.items
+        : this.items.filter(
+            (item) =>
+              this.searchForm.value.name !== "" &&
+              item.name
+                .toLowerCase()
+                .includes(this.searchForm.value.name.toLowerCase())
+          );
     this.resetPage();
   }
 
+  /**
+   * Clears all filters
+   */
   clearFilters(): void {
     this.filterData = this.items;
     this.searchForm.setValue({
@@ -61,8 +73,32 @@ export class GridViewComponent implements OnInit {
     this.resetPage();
   }
 
+  /**
+   * Clears filter by form field name
+   */
+  clearFilterByName(formKey: string): void {
+    this.searchForm.setValue({
+      ...this.searchForm.value,
+      [formKey]: "",
+    });
+    this.onFilterChange();
+  }
+
   onFilterChange(): void {
-    this.filterData = this.items
+    let newData = this.items;
+    if (this.searchForm.value.name) {
+      newData =
+        this.searchForm.value.name === ""
+          ? this.items
+          : this.items.filter(
+              (item) =>
+                this.searchForm.value.name !== "" &&
+                item.name
+                  .toLowerCase()
+                  .includes(this.searchForm.value.name.toLowerCase())
+            );
+    }
+    this.filterData = newData
       .filter((item) => {
         if (this.searchForm.value.role && this.searchForm.value.role !== "") {
           return (

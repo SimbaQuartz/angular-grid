@@ -1,80 +1,15 @@
 <app-nav-bar></app-nav-bar>
 
 <div class="container mx-auto">
-  <div class="my-4 shadow rounded">
+  <div class="my-8 shadow rounded">
     <!-- Search bar of the table -->
     <form
-      class="bg-gray-50"
+      class="bg-gray-50 flex items-center w-full pt-8 pb-4"
       [formGroup]="searchForm"
-      (ngSubmit)="onSubmit()"
+      (ngSubmit)="onFilterChange()"
       autocomplete="off"
     >
-      <div class="flex justify-end">
-        <div class="px-4 lg:w-1/3 sm:w-full flex bg-gray-50 rounded-md">
-          <span
-            class="
-              inline-flex
-              items-center
-              p-3
-              rounded-l-md
-              border border-r-0 border-gray-300
-              bg-gray-50
-              focus:outline-none
-              text-gray-500 text-sm
-              w-56
-            "
-          >
-            Filter by
-          </span>
-          <select
-            id="status"
-            name="status"
-            formControlName="status"
-            (change)="onFilterChange()"
-            class="
-              block
-              w-full
-              p-3
-              border border-gray-300
-              bg-white
-              shadow-sm
-              focus:outline-none
-              focus:ring-indigo-500
-              focus:border-indigo-500
-              sm:text-sm
-            "
-          >
-            <option value="" disabled selected hidden>Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-          <select
-            id="role"
-            name="role"
-            formControlName="role"
-            (change)="onFilterChange()"
-            class="
-              block
-              w-full
-              p-3
-              border border-gray-300
-              bg-white
-              rounded-r-md
-              shadow-sm
-              focus:outline-none
-              focus:ring-indigo-500
-              focus:border-indigo-500
-              sm:text-sm
-            "
-          >
-            <option value="" disabled selected hidden>Role</option>
-            <option value="Owner">Owner</option>
-            <option value="Admin">Admin</option>
-            <option value="Member">Member</option>
-          </select>
-        </div>
-      </div>
-      <div class="px-4 py-2 flex bg-gray-50 rounded-md">
+      <div class="pl-4 flex w-full bg-gray-50 rounded-md">
         <input
           type="text"
           name="name"
@@ -108,25 +43,197 @@
             text-gray-500 text-sm
           "
         >
-          Search
+          Press enter to search
         </button>
       </div>
+      <div class="flex justify-end">
+        <div class="px-4 sm:w-full flex bg-gray-50 rounded-md">
+          <span
+            class="
+              inline-flex
+              items-center
+              p-3
+              rounded-l-md
+              border border-r-0 border-gray-300
+              bg-gray-50
+              focus:outline-none
+              text-gray-500 text-sm
+              w-56
+            "
+          >
+            Filter by
+          </span>
+          <div class="p-3 border w-full border-gray-300 bg-white shadow-sm">
+            <select
+              id="status"
+              name="status"
+              formControlName="status"
+              (change)="onFilterChange()"
+              class="
+                block
+                w-full
+                focus:outline-none
+                focus:ring-indigo-500
+                focus:border-indigo-500
+                sm:text-sm
+              "
+            >
+              <option value="" disabled selected hidden>Status</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+          <div
+            class="
+              p-3
+              border
+              w-full
+              border-gray-300
+              bg-white
+              rounded-r-md
+              shadow-sm
+            "
+          >
+            <select
+              id="role"
+              name="role"
+              formControlName="role"
+              (change)="onFilterChange()"
+              class="
+                block
+                w-full
+                bg-white
+                focus:outline-none
+                focus:ring-indigo-500
+                focus:border-indigo-500
+                sm:text-sm
+              "
+            >
+              <option value="" disabled selected hidden>Role</option>
+              <option value="Owner">Owner</option>
+              <option value="Admin">Admin</option>
+              <option value="Member">Member</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </form>
-    <div class="flex bg-gray-50 justify-end">
-      <button
-        (click)="clearFilters()"
-        class="
-          px-4
-          py-2
-          inline-flex
-          rounded-r-md
-          bg-gray-50
-          focus:outline-none
-          text-gray-500 text-sm
-        "
-      >
-        Clear filters
-      </button>
+    <div
+      *ngIf="
+        searchForm.value &&
+        (searchForm.value.name ||
+          searchForm.value.status ||
+          searchForm.value.role)
+      "
+      class="flex bg-gray-50 justify-between px-4"
+    >
+      <div class="flex space-x-2 mb-2">
+        <button
+          *ngIf="searchForm.value.name"
+          (click)="clearFilterByName('name')"
+          class="
+            px-3
+            py-1
+            rounded
+            bg-white
+            shadow
+            focus:outline-none
+            flex
+            items-center
+          "
+          title="Click to clear filter"
+        >
+          Name starts with
+          <strong class="px-1"> {{ searchForm.value.name }}</strong>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-gray-600"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+        <button
+          *ngIf="searchForm.value.status"
+          (click)="clearFilterByName('status')"
+          class="
+            px-3
+            py-1
+            rounded
+            bg-white
+            shadow
+            focus:outline-none
+            flex
+            items-center
+          "
+          title="Click to clear filter"
+        >
+          Status is <strong class="px-1"> {{ searchForm.value.status }}</strong>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-gray-600"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+        <button
+          *ngIf="searchForm.value.role"
+          (click)="clearFilterByName('role')"
+          class="
+            px-3
+            py-1
+            rounded
+            bg-white
+            shadow
+            focus:outline-none
+            flex
+            items-center
+          "
+          title="Click to clear filter"
+        >
+          Role is <strong class="px-1"> {{ searchForm.value.role }}</strong>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-gray-600"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="">
+        <button
+          (click)="clearFilters()"
+          class="
+            px-4
+            py-2
+            inline-flex
+            rounded-r-md
+            bg-gray-50
+            focus:outline-none
+            text-red-700 text-sm
+          "
+        >
+          Clear filters
+        </button>
+      </div>
     </div>
 
     <!-- Header and body of the table starts form here -->
@@ -134,7 +241,7 @@
       <div class="-my-2 w-full overflow-x-auto">
         <div class="py-2 align-middle inline-block min-w-full">
           <div class="overflow-hidden border-b border-gray-200">
-            <table class="min-w-full divide-y divide-gray-200">
+            <table id="userTable" class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
                   <th
@@ -345,6 +452,7 @@
             >
               <a
                 href="#"
+                (click)="onBackOrFor('back')"
                 class="
                   relative
                   inline-flex
